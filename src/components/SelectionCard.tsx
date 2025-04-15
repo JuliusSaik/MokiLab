@@ -1,8 +1,23 @@
 import React from "react";
 
-const SelectionCard: React.FC<{ subject: string }> = ({ subject }) => {
+interface SelectionCardProps {
+  subject: string;
+  handleSelectSubject: (subject: string) => void;
+  selectedSubject: string;
+}
+
+const SelectionCard: React.FC<SelectionCardProps> = ({
+  subject,
+  handleSelectSubject,
+  selectedSubject,
+}) => {
   return (
-    <div className="bg-white rounded-3xl shadow-lg p-6 max-w-[280px] w-full cursor-pointer hover:shadow-xl transition-shadow duration-300">
+    <div
+      className={`base-animation ${
+        selectedSubject === subject ? "subject-card-active" : "subject-card"
+      }`}
+      onClick={() => handleSelectSubject(subject)}
+    >
       <div className="mb-6 h-40 flex items-center justify-center overflow-hidden">
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <rect

@@ -2,5 +2,25 @@
 @plugin "daisyui";
 
 .class-selections {
-  @apply border-gray-200 border-1 rounded-3xl shadow-sm p-6 w-full cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300;
+  @apply border-gray-200 border-1 rounded-3xl shadow-sm p-6 w-full cursor-pointer;
+}
+
+.subject-card {
+  @apply bg-white rounded-3xl shadow-lg p-6 max-w-[280px] w-full cursor-pointer;
+}
+
+.subject-card-active {
+  @apply bg-purple-200 scale-105 rounded-3xl p-6 max-w-[280px] w-full cursor-pointer shadow-xl;
+}
+
+.base-animation {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
+}
+
+.difficulty-card {
+  @apply border-gray-200 border-1 bg-white rounded-3xl shadow-sm p-6 max-w-sm w-full cursor-pointer;
+}
+
+.difficulty-card-active {
+  @apply border-gray-200 bg-purple-200 scale-105 rounded-3xl p-6 max-w-sm w-full cursor-pointer shadow-lg;
 }
