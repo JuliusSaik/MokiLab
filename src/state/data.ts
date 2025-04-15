@@ -1,0 +1,15 @@
+export const MathTopics = [
+  "Algebra",
+  "Geometrija",
+  "Trigonometrija",
+  "Skaičiavimas",
+  "Statistika",
+  "Tikimybė",
+  "Matematinė logika",
+  "Matematinė analizė",
+  "Skaičių teorija",
+  "Matematinė fizika",
+  "Matematinė statistika",
+  "Matematinė optimizacija",
+  "Vektoriai",
+];

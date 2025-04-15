@@ -5,3 +5,5 @@ export interface RequestPrompt {
   difficulty: string;
   detailedTopicPrompt: string;
 }
+
+export type DifficultiesTypes = "lengvi" | "vidutiniai" | "sunkūs" | "maišyti";
