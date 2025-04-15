@@ -18,7 +18,7 @@ const SelectionCard: React.FC<SelectionCardProps> = ({
       }`}
       onClick={() => handleSelectSubject(subject)}
     >
-      <div className="mb-6 h-40 flex items-center justify-center overflow-hidden">
+      <div className="mb-6 h-20 md:h-40 flex items-center justify-center overflow-hidden">
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <rect
             x="35"

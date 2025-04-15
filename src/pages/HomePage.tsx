@@ -18,7 +18,7 @@ const HomePage = () => {
   const [selectedGrade, setSelectedGrade] = useState(0);
   const [selectedTopic, setSelectedTopic] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] =
-    useState<DifficultiesTypes>("easy");
+    useState<DifficultiesTypes>("lengvi");
 
   const [extraPrompt, setExtraPrompt] = useState("");
 
@@ -48,7 +48,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
-      <ul className="steps w-full my-16 text-white md:text-black">
+      <ul className="steps w-full my-8 text-white md:text-black">
         <li className="step step-primary">Dalykas</li>
         <li className={`step ${sliderStep >= 2 ? "step-primary" : ""}`}>
           Klasė
