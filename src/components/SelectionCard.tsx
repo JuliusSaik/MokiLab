@@ -59,7 +59,9 @@ const SelectionCard: React.FC<SelectionCardProps> = ({
       </div>
 
       <div className="text-left">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">{subject}</h3>
+        <h3 className="text-lg font-semibold text-stone-300 mb-1 justify-center flex items-center">
+          {subject}
+        </h3>
       </div>
     </div>
   );
