@@ -1,16 +1,20 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+:root {
+  --color-custom-black: oklch(20% 0.004 192);
+}
+
 .class-selections {
-  @apply border-gray-200 border-1 rounded-3xl shadow-sm p-6 w-full cursor-pointer;
+  @apply border-stone-200 border-1 rounded-3xl shadow-sm p-6 w-full cursor-pointer;
 }
 
 .subject-card {
-  @apply bg-white rounded-3xl shadow-lg p-6 max-w-[280px] w-full cursor-pointer;
+  @apply border-stone-200 border-1 rounded-3xl shadow-lg p-6 max-w-[280px] w-full cursor-pointer;
 }
 
 .subject-card-active {
-  @apply bg-purple-200 scale-105 rounded-3xl p-6 max-w-[280px] w-full cursor-pointer shadow-xl;
+  @apply border-stone-200 border-1 bg-purple-200/10 scale-105 rounded-3xl p-6 max-w-[280px] w-full cursor-pointer shadow-xl;
 }
 
 .base-animation {
@@ -18,9 +22,16 @@
 }
 
 .difficulty-card {
-  @apply border-gray-200 border-1 bg-white rounded-3xl shadow-sm p-6 max-w-sm w-full cursor-pointer;
+  @apply border-stone-200 border-1 rounded-3xl shadow-sm p-6 max-w-sm w-full cursor-pointer;
 }
 
 .difficulty-card-active {
-  @apply border-gray-200 bg-purple-200 scale-105 rounded-3xl p-6 max-w-sm w-full cursor-pointer shadow-lg;
+  @apply border-stone-200 border-1 bg-purple-200/10 scale-105 rounded-3xl p-6 max-w-sm w-full cursor-pointer shadow-lg;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--color-custom-black);
+  margin: 0;
 }

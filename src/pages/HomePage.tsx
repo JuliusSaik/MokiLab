@@ -9,6 +9,7 @@ import SelectionCard from "../components/SelectionCard";
 import SearchableSelect from "../components/SearchableSelect";
 import { MathTopics } from "../state/data";
 import GradeSelector from "../components/GradeSelector";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   //const { register } = useForm<RequestPrompt>();
@@ -22,9 +23,23 @@ const HomePage = () => {
 
   const [extraPrompt, setExtraPrompt] = useState("");
 
+  const navigate = useNavigate();
+
   const handleNextButton = () => {
     const nextStep = sliderStep + 1;
-    setSliderStep(nextStep);
+    if (nextStep > 5) {
+      navigate("/results", {
+        state: {
+          selectedSubject,
+          selectedGrade,
+          selectedTopic,
+          selectedDifficulty,
+          extraPrompt,
+        },
+      });
+    } else {
+      setSliderStep(nextStep);
+    }
   };
 
   const handlePrevious = () => {
@@ -48,7 +63,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
-      <ul className="steps w-full my-8 text-white md:text-black">
+      <ul className="steps w-full my-8 text-stone-300">
         <li className="step step-primary">Dalykas</li>
         <li className={`step ${sliderStep >= 2 ? "step-primary" : ""}`}>
           Klasė
@@ -67,10 +82,10 @@ const HomePage = () => {
       <div className="w-full lg:w-1/2 flex flex-col">
         {sliderStep === 1 && (
           <div className="text-center w-full">
-            <h1 className="text-4xl font-bold text-purple-700 mb-8">
+            <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pasirinkite mokomojąjį dalyką
             </h1>
-            <div className="flex gap-8">
+            <div className="flex flex-wrap justify-center gap-8">
               {dummySubjects.map((subject) => (
                 <SelectionCard
                   subject={subject}
@@ -85,7 +100,7 @@ const HomePage = () => {
 
         {sliderStep === 2 && (
           <div className="text-center w-full">
-            <h1 className="text-4xl font-bold text-purple-700 mb-8">
+            <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pasirinkite klasę, kuriai norite gauti užduotis
             </h1>
             <GradeSelector
@@ -97,7 +112,7 @@ const HomePage = () => {
 
         {sliderStep === 3 && (
           <div className="text-center mt-8">
-            <h1 className="text-4xl font-bold text-purple-700 mb-8">
+            <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pasirinkite dalyko temą
             </h1>
             <SearchableSelect
@@ -110,10 +125,10 @@ const HomePage = () => {
 
         {sliderStep === 4 && (
           <div className="text-center mt-8">
-            <h1 className="text-4xl font-bold text-purple-700 mb-8">
+            <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pasirinkite sudėtingumo lygį
             </h1>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 text-indigo-300 md:grid-cols-4 gap-4">
               {["Lengvi", "Vidutiniai", "Sunkūs", "Maišyti"].map((option) => (
                 <div
                   className={`base-animation ${
@@ -141,7 +156,7 @@ const HomePage = () => {
 
         {sliderStep === 5 && (
           <div className="text-center mt-8">
-            <h1 className="text-4xl font-bold text-purple-700 mb-8">
+            <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pridėkite papildomus reikalavimus
             </h1>
             <div className="">
@@ -186,13 +201,13 @@ const HomePage = () => {
 
         <div className="mt-32 text-center flex gap-8">
           <button
-            className="w-full font-bold rounded-lg shadow-lg hover:bg-purple-200 hover:scale-105 transition-transform duration-300"
+            className="w-full font-bold rounded-lg shadow-lg border-1 hover:bg-purple-200/10 hover:scale-105 transition-transform duration-300"
             onClick={() => handlePrevious()}
           >
             Atgal
           </button>
           <button
-            className="w-full p-4 bg-purple-600 text-white font-bold rounded-lg shadow-lg hover:bg-purple-700 hover:scale-105 transition-transform duration-300"
+            className="w-full p-4 bg-indigo-500 text-white font-bold rounded-lg shadow-lg hover:bg-indigo-600 hover:scale-105 transition-transform duration-300"
             onClick={() => handleNextButton()}
           >
             Toliau

@@ -57,7 +57,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="relative w-full mb-4">
       <div className="text-lg text-left mb-2">
         {selectedTopic
           ? `Jūsų pasirinkta tema: ${selectedTopic}`
