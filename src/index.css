@@ -1,6 +1,41 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@plugin "daisyui/theme" {
+  name: "black";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: #141616;
+  --color-base-200: #1b1e1e;
+  --color-base-300: #2c3030;
+  --color-base-content: oklch(87.609% 0 0);
+  --color-primary: oklch(58.5% 0.233 277.117);
+  --color-primary-content: oklch(100% 0 0);
+  --color-secondary: #efefef;
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(92.3% 0.003 48.717);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(92.3% 0.003 48.717);
+  --color-neutral-content: oklch(100% 0 0);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(100% 0 0);
+  --color-success: oklch(62% 0.194 149.214);
+  --color-success-content: oklch(100% 0 0);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(100% 0 0);
+  --color-error: oklch(57% 0.245 27.325);
+  --color-error-content: oklch(100% 0 0);
+  --radius-selector: 0.5rem;
+  --radius-field: 1rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 1;
+}
+
 :root {
   --color-custom-black: oklch(20% 0.004 192);
 }
@@ -14,7 +49,7 @@
 }
 
 .subject-card-active {
-  @apply border-stone-200 border-1 bg-purple-200/10 scale-105 rounded-3xl p-6 max-w-[280px] w-full cursor-pointer shadow-xl;
+  @apply border-stone-200 border-1 bg-primary/50 scale-105 rounded-3xl p-6 max-w-[280px] w-full cursor-pointer shadow-xl;
 }
 
 .base-animation {
@@ -26,12 +61,5 @@
 }
 
 .difficulty-card-active {
-  @apply border-stone-200 border-1 bg-purple-200/10 scale-105 rounded-3xl p-6 max-w-sm w-full cursor-pointer shadow-lg;
-}
-
-html,
-body {
-  height: 100%;
-  background-color: var(--color-custom-black);
-  margin: 0;
+  @apply border-stone-200 border-1 bg-primary/50 scale-105 rounded-3xl p-6 max-w-sm w-full cursor-pointer shadow-lg;
 }
