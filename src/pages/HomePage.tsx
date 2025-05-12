@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
-  DifficultiesTypes,
+  Difficulties,
   RequestPrompt,
+  StepToFieldMapping,
 } from "../state/models/RequestModels";
 import { dummySubjects } from "../state/dummyData";
 import SelectionCard from "../components/SelectionCard";
@@ -10,35 +11,39 @@ import SearchableSelect from "../components/SearchableSelect";
 import { MathTopics } from "../state/data";
 import GradeSelector from "../components/GradeSelector";
 import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { promptSchema } from "../state/validation/RequestResolver";
 
 const HomePage = () => {
-  //const { register } = useForm<RequestPrompt>();
-  const [sliderStep, setSliderStep] = useState(1);
-  const [selectedSubject, setSelectedSubject] = useState("");
-  const [subjectTopics, setSubjectTopics] = useState<string[]>([]);
-  const [selectedGrade, setSelectedGrade] = useState(0);
-  const [selectedTopic, setSelectedTopic] = useState("");
-  const [selectedDifficulty, setSelectedDifficulty] =
-    useState<DifficultiesTypes>("lengvi");
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    trigger,
+    getValues,
+    watch,
+    formState: { errors },
+  } = useForm<RequestPrompt>({
+    resolver: yupResolver(promptSchema),
+  });
 
-  const [extraPrompt, setExtraPrompt] = useState("");
+  const [sliderStep, setSliderStep] = useState(1);
+
+  const [subjectTopics, setSubjectTopics] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
-  const handleNextButton = () => {
-    const nextStep = sliderStep + 1;
-    if (nextStep > 5) {
-      navigate("/results", {
-        state: {
-          selectedSubject,
-          selectedGrade,
-          selectedTopic,
-          selectedDifficulty,
-          extraPrompt,
-        },
-      });
-    } else {
-      setSliderStep(nextStep);
+  const handleNextButton = async () => {
+    const fieldToValidate = StepToFieldMapping[sliderStep - 1];
+    const isValid = await trigger(fieldToValidate);
+
+    if (isValid) {
+      const nextStep = sliderStep + 1;
+      if (nextStep > 5) {
+        handleSubmit(onSubmit)();
+      } else {
+        setSliderStep(nextStep);
+      }
     }
   };
 
@@ -49,7 +54,8 @@ const HomePage = () => {
   };
 
   const handleSelectSubject = (subject: string) => {
-    setSelectedSubject(subject);
+    setValue("subject", subject);
+
     switch (subject) {
       case "Matematika":
         setSubjectTopics(MathTopics);
@@ -57,8 +63,18 @@ const HomePage = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setExtraPrompt(e.target.value);
+  const onSubmit = (data: RequestPrompt) => {
+    console.log("Form submitted:", data);
+    const { subject, grade, topic, difficulty, detailedTopicPrompt } = data;
+    navigate("/results", {
+      state: {
+        subject,
+        grade,
+        topic,
+        difficulty,
+        detailedTopicPrompt,
+      },
+    });
   };
 
   return (
@@ -78,7 +94,6 @@ const HomePage = () => {
           Aprašymas
         </li>
       </ul>
-
       <div className="w-full lg:w-1/2 flex flex-col">
         {sliderStep === 1 && (
           <div className="text-center w-full">
@@ -91,10 +106,11 @@ const HomePage = () => {
                   subject={subject}
                   key={subject}
                   handleSelectSubject={handleSelectSubject}
-                  selectedSubject={selectedSubject}
+                  watch={watch}
                 />
               ))}
             </div>
+            <p className="text-error mt-8">{errors.subject?.message}</p>
           </div>
         )}
 
@@ -103,10 +119,8 @@ const HomePage = () => {
             <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pasirinkite klasę, kuriai norite gauti užduotis
             </h1>
-            <GradeSelector
-              selectedGrade={selectedGrade}
-              setSelectedGrade={setSelectedGrade}
-            />
+            <GradeSelector setValue={setValue} watch={watch} />
+            <p className="text-error mt-8">{errors.grade?.message}</p>
           </div>
         )}
 
@@ -117,9 +131,10 @@ const HomePage = () => {
             </h1>
             <SearchableSelect
               options={subjectTopics}
-              selectedTopic={selectedTopic}
-              setSelectedTopic={setSelectedTopic}
+              selectedTopic={getValues("topic")}
+              setValue={setValue}
             />
+            <p className="text-error mt-8">{errors.topic?.message}</p>
           </div>
         )}
 
@@ -128,11 +143,11 @@ const HomePage = () => {
             <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pasirinkite sudėtingumo lygį
             </h1>
-            <div className="grid grid-cols-2 text-indigo-300 md:grid-cols-4 gap-4">
-              {["Lengvi", "Vidutiniai", "Sunkūs", "Maišyti"].map((option) => (
+            <div className="grid grid-cols-2 text-secondary md:grid-cols-4 gap-4">
+              {Difficulties.map((option) => (
                 <div
                   className={`base-animation ${
-                    selectedDifficulty === option.toLowerCase()
+                    watch("difficulty") === option.toLowerCase()
                       ? "difficulty-card-active"
                       : "difficulty-card"
                   }`}
@@ -141,15 +156,14 @@ const HomePage = () => {
                     className="h-16 text-lg flex items-center justify-center overflow-hidden"
                     key={option}
                     onClick={() => {
-                      setSelectedDifficulty(
-                        option.toLowerCase() as DifficultiesTypes
-                      );
+                      setValue("difficulty", option.toLowerCase());
                     }}
                   >
                     {option}
                   </div>
                 </div>
               ))}
+              <p className="text-error mt-8">{errors.difficulty?.message}</p>
             </div>
           </div>
         )}
@@ -182,17 +196,18 @@ const HomePage = () => {
                   <input
                     type="search"
                     placeholder={
-                      extraPrompt ||
                       "Įrašykite papildomus reikalavimus, jeigu tokių turite"
                     }
                     className="px-2"
-                    onChange={(e) => handleInputChange(e)}
-                    value={extraPrompt}
+                    {...register("detailedTopicPrompt")}
                   />
                 </label>
                 <p className="fieldset-label">
                   Galite pridėti tokius reikalavimus, kaip "Duokite 20
                   uždavinių, padarykite tekstinius"
+                </p>
+                <p className="text-error mt-8">
+                  {errors.detailedTopicPrompt?.message}
                 </p>
               </fieldset>
             </div>
@@ -207,7 +222,7 @@ const HomePage = () => {
             Atgal
           </button>
           <button
-            className="w-full p-4 bg-indigo-500 text-white font-bold rounded-lg shadow-lg hover:bg-indigo-600 hover:scale-105 transition-transform duration-300"
+            className="w-full p-4 bg-primary text-white font-bold rounded-lg shadow-lg hover:bg-indigo-600 hover:scale-105 transition-transform duration-300"
             onClick={() => handleNextButton()}
           >
             Toliau
