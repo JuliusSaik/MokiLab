@@ -65,21 +65,21 @@ const HomePage = () => {
 
   const onSubmit = (data: RequestPrompt) => {
     console.log("Form submitted:", data);
-    const { subject, grade, topic, difficulty, detailedTopicPrompt } = data;
+    const { subject, grade, topic, difficulty, extraPrompt } = data;
     navigate("/results", {
       state: {
         subject,
         grade,
         topic,
         difficulty,
-        detailedTopicPrompt,
+        extraPrompt,
       },
     });
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
-      <ul className="steps w-full my-8 text-stone-300">
+      <ul className="steps w-full my-8 text-stone-300 text-xs lg:text-base">
         <li className="step step-primary">Dalykas</li>
         <li className={`step ${sliderStep >= 2 ? "step-primary" : ""}`}>
           Klasė
@@ -88,7 +88,7 @@ const HomePage = () => {
           Tema
         </li>
         <li className={`step ${sliderStep >= 4 ? "step-primary" : ""} `}>
-          Sudėtingumas
+          Lygis
         </li>
         <li className={`step ${sliderStep >= 5 ? "step-primary" : ""} `}>
           Aprašymas
@@ -110,7 +110,7 @@ const HomePage = () => {
                 />
               ))}
             </div>
-            <p className="text-error mt-8">{errors.subject?.message}</p>
+            <p className="text-error mt-8 text-lg">{errors.subject?.message}</p>
           </div>
         )}
 
@@ -120,7 +120,7 @@ const HomePage = () => {
               Pasirinkite klasę, kuriai norite gauti užduotis
             </h1>
             <GradeSelector setValue={setValue} watch={watch} />
-            <p className="text-error mt-8">{errors.grade?.message}</p>
+            <p className="text-error mt-8 text-lg">{errors.grade?.message}</p>
           </div>
         )}
 
@@ -134,7 +134,7 @@ const HomePage = () => {
               selectedTopic={getValues("topic")}
               setValue={setValue}
             />
-            <p className="text-error mt-8">{errors.topic?.message}</p>
+            <p className="text-error mt-8 text-lg">{errors.topic?.message}</p>
           </div>
         )}
 
@@ -163,7 +163,9 @@ const HomePage = () => {
                   </div>
                 </div>
               ))}
-              <p className="text-error mt-8">{errors.difficulty?.message}</p>
+              <p className="text-error mt-8 text-lg">
+                {errors.difficulty?.message}
+              </p>
             </div>
           </div>
         )}
@@ -199,15 +201,15 @@ const HomePage = () => {
                       "Įrašykite papildomus reikalavimus, jeigu tokių turite"
                     }
                     className="px-2"
-                    {...register("detailedTopicPrompt")}
+                    {...register("extraPrompt")}
                   />
                 </label>
                 <p className="fieldset-label">
                   Galite pridėti tokius reikalavimus, kaip "Duokite 20
                   uždavinių, padarykite tekstinius"
                 </p>
-                <p className="text-error mt-8">
-                  {errors.detailedTopicPrompt?.message}
+                <p className="text-error mt-8 text-lg">
+                  {errors.extraPrompt?.message}
                 </p>
               </fieldset>
             </div>
