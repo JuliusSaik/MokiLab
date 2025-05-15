@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { RequestPrompt } from "../state/models/RequestModels";
 
 declare global {
   interface Window {
@@ -26,13 +27,8 @@ type QuizResponse = {
 
 const ResultsPage = () => {
   const location = useLocation();
-  const {
-    selectedSubject,
-    selectedGrade,
-    selectedTopic,
-    selectedDifficulty,
-    extraPrompt,
-  } = location.state || {};
+  const { subject, grade, topic, difficulty, extraPrompt }: RequestPrompt =
+    location.state || {};
 
   const [quizData, setQuizData] = useState<QuizResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,12 +36,7 @@ const ResultsPage = () => {
 
   useEffect(() => {
     const fetchQuiz = async () => {
-      if (
-        !selectedGrade ||
-        !selectedSubject ||
-        !selectedTopic ||
-        !selectedDifficulty
-      ) {
+      if (!subject || !grade || !topic || !difficulty) {
         setError("Missing required data.");
         setLoading(false);
         return;
@@ -56,10 +47,10 @@ const ResultsPage = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            klase: selectedGrade,
-            dalykas: selectedSubject,
-            tema: selectedTopic,
-            sunkumas: selectedDifficulty,
+            klase: grade,
+            dalykas: subject,
+            tema: topic,
+            sunkumas: difficulty,
             extraPrompt: extraPrompt,
             kiekis: 10,
           }),
@@ -78,7 +69,7 @@ const ResultsPage = () => {
     };
 
     fetchQuiz();
-  }, [selectedGrade, selectedSubject, selectedTopic, selectedDifficulty]);
+  }, [grade, subject, topic, difficulty, extraPrompt]);
 
   useEffect(() => {
     if (window.MathJax) {

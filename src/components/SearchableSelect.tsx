@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
+import { UseFormSetValue } from "react-hook-form";
+import { RequestPrompt } from "../state/models/RequestModels";
 
 interface SearchableSelectProps {
   options: string[];
   selectedTopic: string;
-  setSelectedTopic: React.Dispatch<React.SetStateAction<string>>;
+  setValue: UseFormSetValue<RequestPrompt>;
 }
 
 const SearchableSelect: React.FC<SearchableSelectProps> = ({
   options,
   selectedTopic,
-  setSelectedTopic,
+  setValue,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,7 +53,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   };
 
   const handleOptionClick = (option: string) => {
-    setSelectedTopic(option);
+    setValue("topic", option);
     setSearchTerm(option);
     setIsOpen(false);
   };
