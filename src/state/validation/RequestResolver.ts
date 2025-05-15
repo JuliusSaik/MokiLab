@@ -9,7 +9,5 @@ export const promptSchema = yup.object().shape({
     .integer("Klasė turi būti sveikasis skaičius"),
   topic: yup.string().required("Tema yra privaloma"),
   difficulty: yup.string().required("Sudėtingumas yra privalomas"),
-  detailedTopicPrompt: yup
-    .string()
-    .required("Detali temos užklausa yra privaloma"),
+  extraPrompt: yup.string().required("Detali temos užklausa yra privaloma"),
 });
