@@ -1,16 +1,20 @@
 import React from "react";
+import { UseFormWatch } from "react-hook-form";
+import { RequestPrompt } from "../state/models/RequestModels";
 
 interface SelectionCardProps {
   subject: string;
   handleSelectSubject: (subject: string) => void;
-  selectedSubject: string;
+  watch: UseFormWatch<RequestPrompt>;
 }
 
 const SelectionCard: React.FC<SelectionCardProps> = ({
   subject,
   handleSelectSubject,
-  selectedSubject,
+  watch,
 }) => {
+  const selectedSubject = watch("subject");
+
   return (
     <div
       className={`base-animation ${
