@@ -46,7 +46,7 @@ const GradeSelector: React.FC<GradeSelectorProps> = ({ watch, setValue }) => {
         </div>
       </div>
       <div>
-        <h2 className="text-xl text- mb-4">Gimnazija</h2>
+        <h2 className="text-xl text-indigo-300 mb-4">Gimnazija</h2>
         <div className="grid grid-cols-2 gap-6">
           {Array.from({ length: 4 }, (_, i) => (
             <button
