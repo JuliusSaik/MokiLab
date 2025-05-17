@@ -29,7 +29,7 @@ app.options("/api/validate", (req, res) => {
 
 app.post("/api/generate-quiz", async (req, res) => {
   try {
-    const { klase, dalykas, tema, kiekis, sunkumas, extraPromt } = req.body;
+    const { grade, subject, topic, count, difficulty, extraPromt } = req.body;
 
     const completion = await groq.chat.completions.create({
       messages: [
@@ -38,28 +38,29 @@ app.post("/api/generate-quiz", async (req, res) => {
           content: `
 Tu esi pažangus užduočių generatorius Lietuvos moksleiviams.
 REIKALAVIMAI:
-- Generuok ${dalykas.toLowerCase()} uždavinius pagal pasirinktą klasę: ${klase} klasė.
-- Tema: "${tema}"
-- Kiekis: ${kiekis} uždavinių
-- Sunkumas: "${sunkumas}"
+- Generuok ${subject.toLowerCase()} uždavinius pagal pasirinktą klasę: ${grade} klasė.
+- Tema: "${topic}"
+- Kiekis: ${count} uždavinių
+- Sunkumas: "${difficulty}"
 - ExtraPromt: "${extraPromt}"
 FORMATAS:
 Atsakyk TIK šiuo griežtu JSON formatu:
 {
-  "klase": ${klase},
-  "dalykas": "${dalykas}",
-  "tema": "${tema}",
-  "sunkumas": "${sunkumas}",
-  "uzdaviniai": [
+  "grade": ${grade},
+  "subject": "${subject}",
+  "topic": "${topic}",
+  "difficulty": "${difficulty}",
+  "exercises": [
     {
-      "klausimas": "Tekstinis klausimas arba uždavinys",
-      "rezultatas": "Teisingas atasakymas LaTex pavidalu, pvz.: \\frac{1}{2}",
-      "sprendimas": "Be jokių tekstinių paaiškinimų parodyta sprendimų eiga, pvz.: Naudojame formulę: \\frac{a}{b}\\ = ...",
-      "paaiskinimas": "Paaiškink kaip spręsti šį uždavinį su originaliu palyginimu iš gyvenimiškųjų situacijų",}",
+      "question": "Tekstinis klausimas arba uždavinys",
+      "result": "Teisingas atsakymas",
+      "solution": "Be jokio teksto ir žodžių parodyta sprendimo eiga",
+      "reasoning": "Paaiškink, kaip spręsti šį uždavinį, pateik originalų palyginimą su gyvenimiška situacija."
     }
   ]
 }
-Formulems ir lygtims naudok LaTex sintaksę.
+Formulems ir lygtims naudok inline LaTex sintaksę.
+Laipsniams naudok ^\circ pvz.: \angle C = 90^\circ
 Nekomentuok – atsakyk tik su galutiniu JSON.
         `,
         },
