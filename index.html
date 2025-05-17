@@ -9,10 +9,32 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      id="MathJax-script"
-      async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-    ></script>
+    <!-- Mathjax shit-->
+    <script>
+      window.MathJax = {
+        loader: { load: ["input/tex", "output/chtml"] },
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\[", "\\]"],
+          ],
+        },
+        options: {
+          renderActions: {
+            addMenu: [],
+            assistiveMml: [],
+          },
+        },
+        startup: {
+          typeset: false,
+          output: "chtml",
+        },
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   </body>
 </html>

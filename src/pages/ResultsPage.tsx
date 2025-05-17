@@ -11,24 +11,30 @@ declare global {
 }
 
 type QuizQuestion = {
-  klausimas: string;
-  rezultatas: string;
-  sprendimas: string;
-  paaiskinimas: string;
+  question: string;
+  result: string;
+  solution: string;
+  reasoning: string;
 };
 
 type QuizResponse = {
-  klase: number;
-  dalykas: string;
-  tema: string;
-  sunkumas: string;
-  uzdaviniai: QuizQuestion[];
+  grade: number;
+  subject: string;
+  topic: string;
+  difficulty: string;
+  exercises: QuizQuestion[];
 };
 
 const ResultsPage = () => {
   const location = useLocation();
-  const { subject, grade, topic, difficulty, extraPrompt }: RequestPrompt =
-    location.state || {};
+  const {
+    subject,
+    grade,
+    topic,
+    difficulty,
+    count,
+    extraPrompt,
+  }: RequestPrompt = location.state || {};
 
   const [quizData, setQuizData] = useState<QuizResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,7 +42,7 @@ const ResultsPage = () => {
 
   useEffect(() => {
     const fetchQuiz = async () => {
-      if (!subject || !grade || !topic || !difficulty) {
+      if (!subject || !grade || !topic || !count || !difficulty) {
         setError("Missing required data.");
         setLoading(false);
         return;
@@ -47,12 +53,12 @@ const ResultsPage = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            klase: grade,
-            dalykas: subject,
-            tema: topic,
-            sunkumas: difficulty,
+            grade: grade,
+            subject: subject,
+            topic: topic,
+            difficulty: difficulty,
             extraPrompt: extraPrompt,
-            kiekis: 10,
+            count: count,
           }),
         });
 
@@ -69,59 +75,82 @@ const ResultsPage = () => {
     };
 
     fetchQuiz();
-  }, [grade, subject, topic, difficulty, extraPrompt]);
+  }, [grade, subject, topic, difficulty, count, extraPrompt]);
 
   useEffect(() => {
     if (window.MathJax) {
-      window.MathJax.typeset(); // paleidžia MathJax naujai įkeltam turiniui
+      window.MathJax.typeset();
     }
   }, [quizData]);
 
   return (
-    <div className="text-center mt-8">
-      <h1 className="text-4xl font-bold text-stone-300 mb-8">Rezultatai</h1>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-4xl font-bold text-stone-300 mb-8 text-center">
+        Rezultatai
+      </h1>
 
-      {loading && <p>⏳ Kraunama...</p>}
-      {error && <p className="text-red-600">⚠️ Klaida: {error}</p>}
+      {loading && (
+        <div className="space-y-6">
+          {Array.from({ length: count }).map((_, idx) => (
+            <div key={idx} className="skeleton h-40 w-full rounded-lg"></div>
+          ))}
+        </div>
+      )}
+
+      {error && (
+        <div className="alert alert-error max-w-2xl mx-auto">
+          <span>⚠️ Klaida: Nepavyko sukurti uždavinių...</span>
+        </div>
+      )}
 
       {quizData && (
-        <div className="space-y-6 text-left max-w-2xl mx-auto">
-          {quizData.uzdaviniai.map((q: QuizQuestion, index: number) => (
+        <div className="space-y-6">
+          {quizData.exercises.map((q: QuizQuestion, index: number) => (
             <div
               key={index}
-              className="bg-stone-500/10 p-4 rounded-xl shadow-md border-stone-300 border-1"
+              className="bg-stone-500/10 p-6 rounded-xl shadow-md border border-stone-300/30"
             >
-              <p className="font-semibold text-stone-300 text-lg items-start">
-                ❓ {q.klausimas}
+              <p className="font-semibold text-stone-300 text-lg mb-4 overflow-x-auto">
+                ❓ <span dangerouslySetInnerHTML={{ __html: q.question }} />
               </p>
-              <div className="flex flex-col items-center">
-                <details className="w-full m-4 ">
-                  <summary className="p-4 bg-indigo-500 text-white font-bold rounded-lg shadow-lg cursor-pointer hover:bg-indigo-500 transition-colors ">
-                    Peržiūrėti atsakymą ir sprendimo būdą
-                  </summary>
 
-                  <div className="border-1 border-gray-600 p-4 rounded-lg mt-4">
-                    <p
-                      className="text-green-300"
-                      dangerouslySetInnerHTML={{
-                        __html: `✔️ \\(${q.rezultatas}\\)`,
-                      }}
-                    ></p>
+              <details className="group">
+                <summary className="p-4 bg-primary text-white font-bold rounded-lg shadow cursor-pointer hover:bg-primary-focus transition-colors list-none">
+                  Peržiūrėti atsakymą ir sprendimo būdą
+                  <svg
+                    className="w-5 h-5 ml-2 inline-block transform group-open:rotate-180 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </summary>
+
+                <div className="mt-4 space-y-4">
+                  <div className="border border-green-300/50 p-4 rounded-lg overflow-x-auto">
+                    <p className="text-green-300 font-bold">
+                      Teisingas atsakymas:{" "}
+                    </p>
+                    <span className="block">{q.result}</span>
                   </div>
 
-                  <div className="border-1 border-gray-600 p-4 rounded-lg mt-4">
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: `🔍 \\(${q.sprendimas}\\)`,
-                      }}
-                    ></p>
+                  <div className="border border-indigo-300/50 p-4 rounded-lg overflow-x-auto">
+                    <p className="text-indigo-300 font-bold">Sprendimas: </p>
+                    <span className="block">{q.solution}</span>
                   </div>
 
-                  <div className="border-1 border-gray-600 p-4 rounded-lg mt-4">
-                    <p>💡 {q.paaiskinimas}</p>
+                  <div className="p-4 rounded-lg border border-amber-300/50">
+                    <p className="text-amber-300 font-bold">Paaiškinimas: </p>
+                    <p className="text-stone-300">{q.reasoning}</p>
                   </div>
-                </details>
-              </div>
+                </div>
+              </details>
             </div>
           ))}
         </div>

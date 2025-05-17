@@ -3,6 +3,7 @@ export type Fields =
   | "grade"
   | "topic"
   | "difficulty"
+  | "count"
   | "extraPrompt";
 
 export interface RequestPrompt {
@@ -10,6 +11,7 @@ export interface RequestPrompt {
   grade: number;
   topic: string;
   difficulty: string;
+  count: number;
   extraPrompt: string;
 }
 
@@ -19,13 +21,14 @@ export const StepToFieldMapping: Fields[] = [
   "grade",
   "topic",
   "difficulty",
+  "count",
   "extraPrompt",
 ];
 
-export type DifficultiesTypes = "lengvi" | "vidutiniai" | "sunkūs" | "maišyti";
+export type DifficultiesTypes = "Lengvi" | "Vidutiniai" | "Sunkūs" | "Maišyti";
 export const Difficulties: DifficultiesTypes[] = [
-  "lengvi",
-  "vidutiniai",
-  "sunkūs",
-  "maišyti",
+  "Lengvi",
+  "Vidutiniai",
+  "Sunkūs",
+  "Maišyti",
 ];

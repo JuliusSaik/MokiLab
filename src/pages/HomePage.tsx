@@ -10,6 +10,7 @@ import SelectionCard from "../components/SelectionCard";
 import SearchableSelect from "../components/SearchableSelect";
 import { MathTopics } from "../state/data";
 import GradeSelector from "../components/GradeSelector";
+import CountSelector from "../components/CountSelector";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { promptSchema } from "../state/validation/RequestResolver";
@@ -25,6 +26,9 @@ const HomePage = () => {
     formState: { errors },
   } = useForm<RequestPrompt>({
     resolver: yupResolver(promptSchema),
+    defaultValues: {
+      count: 2,
+    },
   });
 
   const [sliderStep, setSliderStep] = useState(1);
@@ -39,7 +43,7 @@ const HomePage = () => {
 
     if (isValid) {
       const nextStep = sliderStep + 1;
-      if (nextStep > 5) {
+      if (nextStep > 6) {
         handleSubmit(onSubmit)();
       } else {
         setSliderStep(nextStep);
@@ -65,13 +69,14 @@ const HomePage = () => {
 
   const onSubmit = (data: RequestPrompt) => {
     console.log("Form submitted:", data);
-    const { subject, grade, topic, difficulty, extraPrompt } = data;
+    const { subject, grade, topic, difficulty, count, extraPrompt } = data;
     navigate("/results", {
       state: {
         subject,
         grade,
         topic,
         difficulty,
+        count,
         extraPrompt,
       },
     });
@@ -91,6 +96,9 @@ const HomePage = () => {
           Lygis
         </li>
         <li className={`step ${sliderStep >= 5 ? "step-primary" : ""} `}>
+          Kiekis
+        </li>
+        <li className={`step ${sliderStep >= 6 ? "step-primary" : ""} `}>
           Aprašymas
         </li>
       </ul>
@@ -171,6 +179,16 @@ const HomePage = () => {
         )}
 
         {sliderStep === 5 && (
+          <div className="text-center mt-8">
+            <h1 className="text-4xl font-bold text-stone-300 mb-8">
+              Pasirinkite kiek norėsite sukurti uždavinių
+            </h1>
+            <CountSelector watch={watch} setValue={setValue} />
+            <p className="text-error mt-8 text-lg">{errors.count?.message}</p>
+          </div>
+        )}
+
+        {sliderStep === 6 && (
           <div className="text-center mt-8">
             <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pridėkite papildomus reikalavimus

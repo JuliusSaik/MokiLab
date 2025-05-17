@@ -12,7 +12,7 @@ function App() {
 
 const MainContent = () => {
   return (
-    <div className="flex flex-col h-screen w-screen bg-custom-black">
+    <div className="flex flex-col h-screen w-screen bg-custom-black overflow-x-hidden">
       <div className="flex justify-center items-center overflow-x-clip p-4 mt-4">
         <Router />
       </div>
