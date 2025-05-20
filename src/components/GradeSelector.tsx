@@ -9,8 +9,6 @@ export interface GradeSelectorProps {
 
 const GradeSelector: React.FC<GradeSelectorProps> = ({ watch, setValue }) => {
   const selectedGrade = watch("grade");
-  console.log("Selected grade:", selectedGrade);
-
   return (
     <div className="grid md:grid-cols-2 gap-8 text-left">
       <div className="w-full">
