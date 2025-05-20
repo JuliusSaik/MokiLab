@@ -10,6 +10,7 @@ export interface RequestPrompt {
   subject: string;
   grade: number;
   topic: string;
+  subtopic: string;
   difficulty: string;
   count: number;
   extraPrompt: string;

@@ -5,15 +5,15 @@ import {
   RequestPrompt,
   StepToFieldMapping,
 } from "../state/models/RequestModels";
-import { dummySubjects } from "../state/dummyData";
+import { subjects } from "../state/data/subjectsData/subjects";
 import SelectionCard from "../components/SelectionCard";
-import SearchableSelect from "../components/SearchableSelect";
-import { MathTopics } from "../state/data";
+import SearchableSelect from "../components/topicSelecton/SearchableSelect";
 import GradeSelector from "../components/GradeSelector";
 import CountSelector from "../components/CountSelector";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { promptSchema } from "../state/validation/RequestResolver";
+import StepSlider from "../components/StepSlider";
 
 const HomePage = () => {
   const {
@@ -21,7 +21,6 @@ const HomePage = () => {
     handleSubmit,
     setValue,
     trigger,
-    getValues,
     watch,
     formState: { errors },
   } = useForm<RequestPrompt>({
@@ -32,9 +31,6 @@ const HomePage = () => {
   });
 
   const [sliderStep, setSliderStep] = useState(1);
-
-  const [subjectTopics, setSubjectTopics] = useState<string[]>([]);
-
   const navigate = useNavigate();
 
   const handleNextButton = async () => {
@@ -59,22 +55,17 @@ const HomePage = () => {
 
   const handleSelectSubject = (subject: string) => {
     setValue("subject", subject);
-
-    switch (subject) {
-      case "Matematika":
-        setSubjectTopics(MathTopics);
-        break;
-    }
   };
 
   const onSubmit = (data: RequestPrompt) => {
-    console.log("Form submitted:", data);
-    const { subject, grade, topic, difficulty, count, extraPrompt } = data;
+    const { subject, grade, topic, subtopic, difficulty, count, extraPrompt } =
+      data;
     navigate("/results", {
       state: {
         subject,
         grade,
         topic,
+        subtopic,
         difficulty,
         count,
         extraPrompt,
@@ -84,24 +75,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
-      <ul className="steps w-full my-8 text-stone-300 text-xs lg:text-base">
-        <li className="step step-primary">Dalykas</li>
-        <li className={`step ${sliderStep >= 2 ? "step-primary" : ""}`}>
-          Klasė
-        </li>
-        <li className={`step ${sliderStep >= 3 ? "step-primary" : ""} `}>
-          Tema
-        </li>
-        <li className={`step ${sliderStep >= 4 ? "step-primary" : ""} `}>
-          Lygis
-        </li>
-        <li className={`step ${sliderStep >= 5 ? "step-primary" : ""} `}>
-          Kiekis
-        </li>
-        <li className={`step ${sliderStep >= 6 ? "step-primary" : ""} `}>
-          Aprašymas
-        </li>
-      </ul>
+      <StepSlider sliderStep={sliderStep} />
       <div className="w-full lg:w-1/2 flex flex-col">
         {sliderStep === 1 && (
           <div className="text-center w-full">
@@ -109,7 +83,7 @@ const HomePage = () => {
               Pasirinkite mokomojąjį dalyką
             </h1>
             <div className="flex flex-wrap justify-center gap-8">
-              {dummySubjects.map((subject) => (
+              {subjects.map((subject) => (
                 <SelectionCard
                   subject={subject}
                   key={subject}
@@ -137,11 +111,7 @@ const HomePage = () => {
             <h1 className="text-4xl font-bold text-stone-300 mb-8">
               Pasirinkite dalyko temą
             </h1>
-            <SearchableSelect
-              options={subjectTopics}
-              selectedTopic={getValues("topic")}
-              setValue={setValue}
-            />
+            <SearchableSelect watch={watch} setValue={setValue} />
             <p className="text-error mt-8 text-lg">{errors.topic?.message}</p>
           </div>
         )}

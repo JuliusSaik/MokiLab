@@ -31,6 +31,7 @@ const ResultsPage = () => {
     subject,
     grade,
     topic,
+    subtopic,
     difficulty,
     count,
     extraPrompt,
